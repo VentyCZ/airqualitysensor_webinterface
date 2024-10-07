@@ -6,7 +6,7 @@ To setup your Air Quality Sensor, you need to have a file structure in your sd c
 root
 |-- config
 |   |-- wifi_credentials.txt
-|-- template
+|-- webinterface
 |   |-- index.html
 |   |-- [other supporting files for the web interface]
 ```
