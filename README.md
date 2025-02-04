@@ -1,3 +1,6 @@
+> [!CAUTION]
+> Currently setting up the project structure from the original repo which only contained a ZIP file.
+
 ### Template for airquality sensor
 
 To setup your Air Quality Sensor, you need to have a file structure in your sd card that follows the following structure:

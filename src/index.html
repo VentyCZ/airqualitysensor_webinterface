@@ -1,0 +1,199 @@
+<html lang='en'>
+
+<head>
+    <title>Air Quality Sensor</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <meta charset='UTF-8'></meta>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/index.css">
+</head>
+
+<body>
+    <div id='particles-js'></div>
+    <div id='loading'>
+        <p><span id='loading-text'>Loading...</span></p>
+
+    </div>
+
+    <div id='pil' class='pil'>Unreachable sensor</div>
+    <div id='canvas-container'>
+        <canvas id='background-canvas'></canvas>
+    </div>
+
+    <div id='tab1' class='tab-content'>
+        <button id='info-btn' class='info-button-style'>i</button>
+        <div class='tooltip' id='tooltip'></div>
+        <div class='param-out-container'>
+            <div id='main-row' class='row'>
+                <div id='main-parameter-container' class='parameter-container main'>
+                    <div id='aqi' class='parameter'>
+                        <div class='parameter-label'>AQI</div>
+                        <div class='parameter-value'>--</div>
+                        <div class='bar'></div>
+                    </div>
+                </div>
+            </div>
+            <div id='other-row' class='row'>
+                <div class='parameter-container'>
+                    <div id='ppm1_0' class='parameter'>
+                        <div class='parameter-label'>PPM 1.0</div>
+                        <div class='parameter-value'>--</div>
+                    </div>
+                    <div id='ppm2_5' class='parameter'>
+                        <div class='parameter-label'>PPM 2.5</div>
+                        <div class='parameter-value'>--</div>
+                    </div>
+                    <div id='ppm10' class='parameter'>
+                        <div class='parameter-label'>PPM 10</div>
+                        <div class='parameter-value'>--</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id='chart-container'>
+
+        </div>
+    </div>
+    <div id='tab2' class='tab-content'>
+
+        <button id='close-btn' class='info-button-style'>X</button>
+        <div id='settings-container'>
+            <h3>Air Quality Sensor by studio LUFF</h3> <br>
+            <div>
+
+                Air is an invisible life support system that we mostly give for granted. With this sensor you will be
+                able to
+                monitor the indoor air quality.
+                <br>
+                The physical product uses color coding that corresponds to the <a href='https://www.airnow.gov/aqi/aqi-basics/'> U.S. Air Quality Index (AQI) scale</a>.
+                <br><br>
+                <div class='aqi-container'>
+                    <div class='aqi-row good'>GOOD</div>
+                    <div class='aqi-row good'>0 - 50</div>
+                    <div class='aqi-row moderate'>MODERATE</div>
+                    <div class='aqi-row moderate'>51 - 100</div>
+                    <div class='aqi-row sensitive'>UNHEALTHY FOR SENSITIVE GROUPS</div>
+                    <div class='aqi-row sensitive'>101 - 150</div>
+                    <div class='aqi-row unhealthy'>UNHEALTHY</div>
+                    <div class='aqi-row unhealthy'>151 - 200</div>
+                    <div class='aqi-row very-unhealthy'>VERY UNHEALTHY</div>
+                    <div class='aqi-row very-unhealthy'>201 - 300</div>
+                    <div class='aqi-row hazardous'>HAZARDOUS</div>
+                    <div class='aqi-row hazardous'>300+</div>
+                </div>
+
+                <br>
+                <hr>
+                <br>
+                <br>
+                <h3>Settings</h3> <br>
+                We designed the behavior of the Air Quality Sensor to work for most, but we also believe that people should be able to customize their products. That is why we are exposing a few parameters that you
+                can
+                tweak. <br><br>
+                <button id='button-advanced-settings' class='link-button'>Show settings</button>
+            </div>
+            <div id='settings-feedback-box'>
+                <span id='waiting-message'>Waiting for sensor</span>
+                <span id='uploading-message' style='display:none'>Syncing with sensor</span>
+                <span class='anim-dot'>.</span>
+                <span class='anim-dot'>.</span>
+                <span class='anim-dot'>.</span>
+            </div>
+            <div id='active-settings'>
+
+                <table class='settings-group'>
+
+                    <tr>
+                        <td>
+
+                        </td>
+                    </tr>
+                    <tr class='setting-item'>
+                        <td>
+                            <label for='custom-sleep-time'><span class='bold'>Reading Frequency:</span><br> select how
+                                often
+                                you want your sensor to take air quality measurements.</label>
+                        </td>
+                        <td class='td-control'>
+                            <input type='range' id='custom-read-time' min='5' max='60' value='6'><br>
+                            <span id='custom-read-time-value' class='control-value'>6 minutes</span>
+                        </td>
+                    </tr>
+
+                    <tr class='setting-item'>
+                        <td>
+                            <label for='overall-brightness'><span class='bold'>Max brightness:</span><br> adjust the
+                                brightness of the sensor's display to your preferred level.</label>
+                        </td>
+                        <td class='td-control'>
+                            <input type='range' id='overall-brightness' min='25' max='100' value='100'><br>
+                            <span id='overall-brightness-value' class='control-value'>100%</span>
+                        </td>
+                    </tr>
+                    <tr class='setting-item'>
+                        <td>
+                            <label for='time-led-on'><span class='bold'>LED Indicator Time:</span><br> set how long the
+                                LED
+                                indicator light should stay on after an interaction.</label>
+                        </td>
+                        <td class='td-control'>
+                            <input type='range' id='time-led-on' min='1' max='30' value='3'><br>
+                            <span id='time-led-on-value' class='control-value'>3 seconds</span>
+                        </td>
+                    </tr>
+                    <tr class='setting-item'>
+                        <td>
+                            <label for='threshold-indicator'><span class='bold'>Air Quality Alert Level:</span><br>
+                                Choose
+                                the Air Quality Index value at which you'd like the sensor to alert you of potential air
+                                quality issues.</label>
+                        </td>
+                        <td class='td-control'>
+                            <input type='range' id='threshold-indicator' min='10' max='150' value='50'><br>
+                            <span id='threshold-indicator-value' class='threshold-indicator'>50 AQI</span>
+                        </td>
+                    </tr>
+
+
+
+                    <tr class='setting-item'>
+                        <td>
+                        </td>
+                        <td class='td-control'>
+
+                        </td>
+                    </tr>
+                    <tr class='setting-item'>
+                        <td>
+                            <button id='reset-defaults' class='link-button'>Reset defaults</button>
+                        </td>
+                        <td>
+
+                        </td>
+                    </tr>
+                </table>
+
+                <div style='text-align: center;'>
+
+                </div>
+                <div class='setting-break'></div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <img id='textureImage'></img>
+    <script src="libs/reconnecting-websocket.js"></script>
+    <script src="libs/particles.js"></script>
+    <script src="index.js"></script>
+
+</body>
+
+</html>
