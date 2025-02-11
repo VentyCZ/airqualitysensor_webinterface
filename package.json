@@ -1,0 +1,14 @@
+{
+  "name": "airqualitysensor_webinterface",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "./bundle.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VentyCZ/airqualitysensor_webinterface.git"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  }
+}

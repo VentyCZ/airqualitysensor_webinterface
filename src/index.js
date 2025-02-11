@@ -1,3 +1,6 @@
+import './libs/reconnecting-websocket';
+import './libs/particles';
+
 //GLOBAL VARIABLES
 window.historicalData = [];
 window.aggregateData = [];
