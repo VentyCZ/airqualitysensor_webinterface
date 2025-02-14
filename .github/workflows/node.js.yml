@@ -25,3 +25,11 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm run build
+    - name: Create artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build
+        overwrite: true
+        path: |
+            build/
+            !build/.gitignore
