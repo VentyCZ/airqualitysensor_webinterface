@@ -10,5 +10,9 @@
   },
   "devDependencies": {
     "esbuild": "^0.25.0"
+  },
+  "dependencies": {
+    "particles.js": "^2.0.0",
+    "reconnectingwebsocket": "^1.0.0"
   }
 }

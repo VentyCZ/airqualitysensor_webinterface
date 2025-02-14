@@ -1,5 +1,5 @@
-import './libs/reconnecting-websocket';
-import './libs/particles';
+import 'reconnectingwebsocket';
+import 'particles.js';
 
 //GLOBAL VARIABLES
 window.historicalData = [];

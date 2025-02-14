@@ -8,7 +8,7 @@ buildSync({
     absWorkingDir: `${__dirname}/src/`,
     outdir: `${__dirname}/build/webinterface`,
     bundle: true,
-    // minify: true,
+    minify: true,
     loader: {
         '.ico': 'copy',
         '.json': 'copy',
