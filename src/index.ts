@@ -1,21 +1,26 @@
-import 'reconnectingwebsocket';
+import ReconnectingWebSocket from 'reconnecting-websocket';
 import 'particles.js';
+
+type DataPoint = {
+    timestamp: Date
+    value: number
+    ppm2_5: number
+    ppm10: number
+    ppm1_0: number
+}
 
 // TODO: Types
 declare global {
     interface Window {
-        historicalData: any
+        historicalData: DataPoint[][]
         aggregateData: any
         currentData: any
+
         pJSDom: any
     }
 
     interface Document {
         getElementById<E extends HTMLElement = HTMLElement>(elementId: string): E | null;
-    }
-
-    interface WebSocket {
-        timeoutInterval: number
     }
 }
 
@@ -27,10 +32,9 @@ window.currentData = {};
 const air_quality_sensor = (() => {
     // //PRIVATE VARIABLE
 
-    let socket = new WebSocket('ws://' + window.location.host + '/ws');
-
-
-    socket.timeoutInterval = 7500;
+    let socket = new ReconnectingWebSocket('ws://' + window.location.host + '/ws', [], {
+        connectionTimeout: 7500,
+    });
 
     var callbackOnReceiveCurrentData, callbackOnReceiveHistoricalData, callbackOnReceiveSettings, callbackOnOpen, callbackOnClose;
     var init = function (onReceiveCurrentData, onReceiveHistoricalData, onReceiveSettings, onOpen, onClose) {
@@ -113,8 +117,8 @@ const air_quality_sensor = (() => {
 
         const now = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 1, 0);
 
-        var keyDateTmp;
-        var dayDateTmp;
+        var keyDateTmp: Date;
+        var dayDateTmp: Date;
         for (let element of result) {
             // Create a new Date instance with the UTC time
             const utcDate = new Date(0); // The 0 there is the key, which sets the date to the epoch
@@ -133,7 +137,7 @@ const air_quality_sensor = (() => {
                 window.historicalData[dateDiffIndex] = [];
             }
 
-            let dataPoint = {
+            let dataPoint: DataPoint = {
                 timestamp: keyDateTmp,
                 value: AQIVal(element[1]),
                 ppm2_5: element[1],
