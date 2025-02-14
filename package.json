@@ -4,6 +4,7 @@
   "scripts": {
     "build": "./bundle.js"
   },
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/VentyCZ/airqualitysensor_webinterface.git"

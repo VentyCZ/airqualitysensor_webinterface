@@ -1,7 +1,16 @@
 #!/usr/bin/env node
-const { buildSync } = require('esbuild');
+//@ts-check
+import { build } from 'esbuild';
+import VersionPlugin from './bundle/version.js';
 
-buildSync({
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = path.dirname(
+    fileURLToPath(import.meta.url)
+);
+
+build({
     entryPoints: [
         './*'
     ],
@@ -9,6 +18,9 @@ buildSync({
     outdir: `${__dirname}/build/webinterface`,
     bundle: true,
     minify: true,
+    plugins: [
+        VersionPlugin,
+    ],
     loader: {
         '.ico': 'copy',
         '.json': 'copy',
