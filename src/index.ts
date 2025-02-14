@@ -1,6 +1,24 @@
 import 'reconnectingwebsocket';
 import 'particles.js';
 
+// TODO: Types
+declare global {
+    interface Window {
+        historicalData: any
+        aggregateData: any
+        currentData: any
+        pJSDom: any
+    }
+
+    interface Document {
+        getElementById<E extends HTMLElement = HTMLElement>(elementId: string): E | null;
+    }
+
+    interface WebSocket {
+        timeoutInterval: number
+    }
+}
+
 //GLOBAL VARIABLES
 window.historicalData = [];
 window.aggregateData = [];
@@ -370,7 +388,7 @@ function createTexture(numbers) {
     canvas.height = 40;
 
     // Get the 2D rendering context
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d')!;
 
     // Draw the stripes
     for (let i = 0; i < canvas.width; i += 2) {
@@ -414,6 +432,9 @@ function interpolateColors(value) {
         [251, 300],
         [301, 1000]
     ];
+
+    let rVal, gVal, bVal;
+
     if (value >= extremes[0][0] && value <= extremes[0][1]) {
         rVal = map(value, extremes[0][0], extremes[0][1], colors[0][0], colors[0][0]);
         gVal = map(value, extremes[0][0], extremes[0][1], colors[0][1], colors[0][1]);
@@ -506,25 +527,25 @@ document.addEventListener("DOMContentLoaded", function () {
     //INITIALIZE THE VARIABLES
     var settingsTimer = null; // Initialize a variable to store the timer ID
 
-    const customReadTimeInput = document.getElementById('custom-read-time');
-    const customReadTimeValue = document.getElementById('custom-read-time-value');
+    const customReadTimeInput = document.getElementById<HTMLInputElement>('custom-read-time')!;
+    const customReadTimeValue = document.getElementById('custom-read-time-value')!;
 
 
-    const overallBrightnessInput = document.getElementById('overall-brightness');
-    const overallBrightnessValue = document.getElementById('overall-brightness-value');
+    const overallBrightnessInput = document.getElementById<HTMLInputElement>('overall-brightness')!;
+    const overallBrightnessValue = document.getElementById('overall-brightness-value')!;
 
-    const timeLEDOnInput = document.getElementById("time-led-on");
-    const timeLEDOnValue = document.getElementById("time-led-on-value");
+    const timeLEDOnInput = document.getElementById<HTMLInputElement>("time-led-on")!;
+    const timeLEDOnValue = document.getElementById("time-led-on-value")!;
 
-    const thresholdIndicatorInput = document.getElementById("threshold-indicator");
-    const thresholdIndicatorValue = document.getElementById("threshold-indicator-value");
+    const thresholdIndicatorInput = document.getElementById<HTMLInputElement>("threshold-indicator")!;
+    const thresholdIndicatorValue = document.getElementById("threshold-indicator-value")!;
 
     var disconnectCounter = 0;
 
     var pilSettingsTimeout;
 
     let removeLoadingOverlay = () => {
-        document.getElementById("loading").style.display = "none";
+        document.getElementById("loading")!.style.display = "none";
         DismissPil();
 
     }
@@ -566,14 +587,14 @@ document.addEventListener("DOMContentLoaded", function () {
         if (newSettings.length >= 4) {
 
             var frequencyRead = newSettings[0] / (60 * 1000);
-            customReadTimeInput.value = frequencyRead;
+            customReadTimeInput.value = frequencyRead as any;
             customReadTimeValue.textContent = `${frequencyRead} minutes`;
 
-            overallBrightnessInput.value = newSettings[1] * 100;
+            overallBrightnessInput.value = newSettings[1] * 100 as any;
             overallBrightnessValue.textContent = `${overallBrightnessInput.value}%`;
 
             var timeLedOn = newSettings[2] / 1000;
-            timeLEDOnInput.value = timeLedOn;
+            timeLEDOnInput.value = timeLedOn as any;
             timeLEDOnValue.textContent = `${timeLedOn} seconds `;
 
             thresholdIndicatorInput.value = newSettings[3];
@@ -597,7 +618,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     air_quality_sensor.init(onCurrentDataReceived, onHistoricalDataReceived, onReceiveSettings, onOpenSocket, onCloseSocket);
 
-    const feedbackBox = document.getElementById("settings-feedback-box");
+    const feedbackBox = document.getElementById("settings-feedback-box")!;
 
     const checkIfSensorOnline = () => {
         window.setTimeout(() => {
@@ -615,6 +636,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     //BACKGROUND:
+    //@ts-ignore
     particlesJS.load('particles-js', './particlesjs-config.json', function () {
 
 
@@ -627,15 +649,15 @@ document.addEventListener("DOMContentLoaded", function () {
     // JavaScript
     const tabsContainer = document.getElementById('tabs-container');
     const tabContents = document.querySelectorAll('.tab-content');
-    const infoBtn = document.getElementById('info-btn');
-    const closeBtn = document.getElementById('close-btn');
+    const infoBtn = document.getElementById('info-btn')!;
+    const closeBtn = document.getElementById('close-btn')!;
 
     infoBtn.addEventListener('click', () => {
         tabContents.forEach(tabContent => {
             tabContent.classList.remove('active');
         });
         initSettings();
-        document.getElementById('tab2').classList.add('active');
+        document.getElementById('tab2')!.classList.add('active');
     });
 
     closeBtn.addEventListener('click', () => {
@@ -643,19 +665,19 @@ document.addEventListener("DOMContentLoaded", function () {
             tabContent.classList.remove('active');
         });
 
-        document.getElementById('tab1').classList.add('active');
+        document.getElementById('tab1')!.classList.add('active');
     });
 
-    document.getElementById('tab1').classList.add('active');
+    document.getElementById('tab1')!.classList.add('active');
 
 
     function visualizeData() {
 
-        const container = document.getElementById('chart-container');
+        const container = document.getElementById('chart-container')!;
         container.innerHTML = ''; // Clear previous visualization
 
         // Assuming you have an array called historicalData
-        var historicalDataIndexes = [];
+        var historicalDataIndexes: number[] = [];
 
         //get indexes
         for (let i = 0; i < window.historicalData.length; i++) {
@@ -676,7 +698,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const today = new Date();
         const timestamps = allIndices.map((index) => {
             const date = new Date(today.getTime() - index * 24 * 60 * 60 * 1000);
-            const options = { weekday: 'long', month: 'long', day: 'numeric' };
+            const options: Intl.DateTimeFormatOptions = { weekday: 'long', month: 'long', day: 'numeric' };
             const dateString = date.toLocaleDateString('en-US', options);
             return dateString;
         });
@@ -696,7 +718,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const canvas = document.createElement('canvas');
             canvas.width = document.documentElement.clientWidth - 60;
             canvas.height = 50;
-            const ctx = canvas.getContext('2d');
+            const ctx = canvas.getContext('2d')!;
             // Set text content and position for labels
             const labels = ['3am', '6am', '9am', '12pm', '3pm', '6pm', '9pm'];
             const labelHeight = 20;
@@ -775,6 +797,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
+    var tooltip = document.getElementById("tooltip")!;
     function showDataPointValue(e) {
 
         const canvas = e.target;
@@ -811,8 +834,7 @@ document.addEventListener("DOMContentLoaded", function () {
             hideTooltip();
             return;
         }
-        var tooltip = document.getElementById("tooltip");
-
+        
         // // 4. Update the tooltip content and position
         if (dataPoint) {
             tooltip.innerHTML = `<span class="tooltip-time">${padLeftZero(dataPoint.timestamp.getHours(), 2)}:${padLeftZero(dataPoint.timestamp.getMinutes(), 2)}</span> &#9; AQI: <span class="tooltip-val">${dataPoint.value}</span> <br>  ppm10: <span class="tooltip-val"> ${dataPoint.ppm10}</span> ppm2.5: <span class="tooltip-val">${dataPoint.ppm2_5}</span> ppm1.0: <span class="tooltip-val">${dataPoint.ppm1_0}</span>`;
@@ -838,7 +860,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const disableControls = () => {
 
-        document.querySelectorAll('.setting-item input[type="range"], .setting-item button, .setting-item input[type = "checkbox"]').forEach(control => {
+        document.querySelectorAll<HTMLInputElement|HTMLButtonElement>('.setting-item input[type="range"], .setting-item button, .setting-item input[type = "checkbox"]').forEach(control => {
             control.classList.add('disabled');
             control.disabled = true; // Add a disabled attribute to the elements as well
 
@@ -856,9 +878,9 @@ document.addEventListener("DOMContentLoaded", function () {
         // Set the display property to 'none'
         feedbackBox.style.display = "none";
 
-        document.getElementById("settings-container").style.display = "block";
+        document.getElementById("settings-container")!.style.display = "block";
 
-        document.querySelectorAll('.setting-item input, .setting-item input, button').forEach(control => {
+        document.querySelectorAll<HTMLInputElement|HTMLButtonElement>('.setting-item input, .setting-item input, button').forEach(control => {
             control.classList.remove('disabled');
             control.disabled = false; // Remove the disabled attribute from the elements
         });
@@ -920,8 +942,8 @@ document.addEventListener("DOMContentLoaded", function () {
         air_quality_sensor.querySettings();
     };
 
-    function ShowPil(message, type, dismissTime) {
-        const pil = document.getElementById('pil');
+    function ShowPil(message, type?, dismissTime?) {
+        const pil = document.getElementById('pil')!;
         pil.textContent = message;
         pil.style.visibility = 'visible';
         pil.classList.add('animate-in');
@@ -943,7 +965,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function DismissPil() {
-        const pil = document.getElementById('pil');
+        const pil = document.getElementById('pil')!;
         pil.classList.remove('animate-in');
         setTimeout(() => {
             pil.style.visibility = 'hidden';
@@ -953,11 +975,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     const updateSettings = () => {
-        var frequencyRead = (customReadTimeInput.value * 60 * 1000);
+        var frequencyRead = (+customReadTimeInput.value * 60 * 1000);
 
-        var overallBrightness = overallBrightnessInput.value / 100.0;
-        var timeLedOn = timeLEDOnInput.value * 1000;
-        var thresholdIndicator = thresholdIndicatorInput.value - 0;
+        var overallBrightness = +overallBrightnessInput.value / 100.0;
+        var timeLedOn = +timeLEDOnInput.value * 1000;
+        var thresholdIndicator = +thresholdIndicatorInput.value - 0;
         disableControls();
         air_quality_sensor.setSettings(frequencyRead, overallBrightness, timeLedOn, thresholdIndicator);
 
@@ -970,7 +992,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     //RESET DEFAULS
-    document.getElementById("reset-defaults").addEventListener("click", function (event) {
+    document.getElementById("reset-defaults")!.addEventListener("click", function (event) {
         air_quality_sensor.resetDefaultSettings();
         disableControls();
     });
@@ -979,19 +1001,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     //HIDE ADVANCED SETTIGNS
     //SHOW ADVANCED SETTINGS
-    const settingsBox = document.getElementById('active-settings');
+    const settingsBox = document.getElementById('active-settings')!;
     settingsBox.style.display = "none";
     var isShowingSettings = false;
-    document.getElementById("button-advanced-settings").addEventListener("click", function () {
+    document.getElementById("button-advanced-settings")!.addEventListener("click", function () {
         if (isShowingSettings) {
             //change button label 
-            document.getElementById("button-advanced-settings").textContent = "Show settings";
-            const settingsBox = document.getElementById('active-settings');
+            document.getElementById("button-advanced-settings")!.textContent = "Show settings";
+            const settingsBox = document.getElementById('active-settings')!;
             settingsBox.style.display = "none";
         }
         else {
-            document.getElementById("button-advanced-settings").textContent = "Hide settings";
-            const settingsBox = document.getElementById('active-settings');
+            document.getElementById("button-advanced-settings")!.textContent = "Hide settings";
+            const settingsBox = document.getElementById('active-settings')!;
             settingsBox.style.display = "";
         }
         isShowingSettings = !isShowingSettings;
