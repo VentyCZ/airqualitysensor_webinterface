@@ -35,11 +35,10 @@ jobs:
             !build/.gitignore
     - name: Create ZIP
       run: (cd build && zip -r webinterface.zip webinterface/)
-      #if: startsWith(github.ref, 'refs/tags/')
+      if: startsWith(github.ref, 'refs/tags/')
     - name: Release
       uses: softprops/action-gh-release@v2
-      #if: startsWith(github.ref, 'refs/tags/')
+      if: startsWith(github.ref, 'refs/tags/')
       with:
-        tag_name: test_tag
         files: |
           build/webinterface.zip
